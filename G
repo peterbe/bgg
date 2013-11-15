@@ -1,0 +1,6 @@
+#!/usr/bin/env python
+
+if __name__ == '__main__':
+    import sys
+    from bgg.main import run
+    sys.exit(run(sys.argv[1:]))
