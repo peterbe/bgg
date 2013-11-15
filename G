@@ -2,5 +2,5 @@
 
 if __name__ == '__main__':
     import sys
-    from bgg.main import run
-    sys.exit(run(sys.argv[1:]))
+    from bgg.__main__ import run
+    sys.exit(run())

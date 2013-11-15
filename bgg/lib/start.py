@@ -12,10 +12,8 @@ from . import config
 
 
 def get_bugzilla_summary(bugnumber):
-    credentials_file = os.path.expanduser(config.BUGZILLA_CREDENTIALS)
-    try:
-        credentials = json.load(open(credentials_file))
-    except IOError:
+    credentials = config.BUGZILLA_CREDENTIALS
+    if not credentials:
         credentials = None
         bugzilla_login = raw_input('Bugzilla username: ')
         if bugzilla_login:
@@ -40,9 +38,8 @@ def get_bugzilla_summary(bugnumber):
                 credentials = {'username': bugzilla_login}
                 for cookie in cookies:
                     credentials[cookie.name] = cookie.value
-                with open(credentials_file, 'w') as f:
-                    json.dump(credentials, f)
-                print "Your bugzilla credentials are now stored in", config.BUGZILLA_CREDENTIALS
+                config.save_bugzilla_credentials(credentials)
+                print "Your bugzilla cookie is now stored in", config.CONFIG_FILE
 
     headers = {'Accept': 'application/json'}
     url = 'https://api-dev.bugzilla.mozilla.org/latest/bug/%s' % bugnumber
@@ -95,8 +92,11 @@ def call(seq):
 
 def run(bugnumber=None):
     branches = call(['git', 'branch'])
+    if 'Not a git repository' in branches:
+        print "Are you sure you're in a git repository?"
+        return 1
     current_branchname = [x.replace('* ', '').strip() for x in branches.splitlines() if x.startswith('* ')][0]
-    print "CURRENT_BRANCHNAME", current_branchname
+    print "You're currently on branch", current_branchname
     if bugnumber:
         summary = get_bugzilla_summary(bugnumber)
         summary = re.sub('^\[[\w-]+\]\s*', '', summary)
