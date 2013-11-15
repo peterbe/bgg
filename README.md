@@ -1,7 +1,7 @@
 Bugzilla, Git and Github
 ========================
 
-A busy man's love story with Bugzilla, git and Github.
+A love story with Bugzilla, git and Github.
 
 This script encapsulates as much automation as possible when working
 with Git and especially with Bugzilla and Github.

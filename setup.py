@@ -35,7 +35,7 @@ setup(
     name='bgg',
     scripts=['G'],
     version=find_version('bgg/__init__.py'),
-    description="A busy man's love story with Bugzilla, git and Github",
+    description="A love story with Bugzilla, git and Github",
     long_description=read('README.md') + '\n\n',# +
                      #'\n'.join(read('docs', 'changelog.rst')
                      #              .splitlines()[1:]
