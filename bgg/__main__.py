@@ -7,6 +7,7 @@ from lib import merge
 from lib import rebase
 from lib import makediff
 
+
 def run():
     try:
         r = _run()
@@ -15,16 +16,24 @@ def run():
         print
     return int(r or 0)
 
+
 def _run():
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("start", nargs='?', help="Start a new branch")
-    parser.add_argument("branches", nargs='?', help="List and search active branches")
-    parser.add_argument("commit", nargs='?', help="Commit the current branch")
-    parser.add_argument("rebase", nargs='?', help="Pull latest master and rebase against that")
-    parser.add_argument("merge", nargs='?', help="Merge the current branch onto master")
-    parser.add_argument("makediff", nargs='?', help="Make a diff file")
-    parser.add_argument("--no-verify", help="Makes sense if you use check.py",
+    parser.add_argument("start", nargs='?',
+                        help="Start a new branch")
+    parser.add_argument("branches", nargs='?',
+                        help="List and search active branches")
+    parser.add_argument("commit", nargs='?',
+                        help="Commit the current branch")
+    parser.add_argument("rebase", nargs='?',
+                        help="Pull latest master and rebase against that")
+    parser.add_argument("merge", nargs='?',
+                        help="Merge the current branch onto master")
+    parser.add_argument("makediff", nargs='?',
+                        help="Make a diff file")
+    parser.add_argument("--no-verify",
+                        help="Makes sense if you use check.py",
                         action="store_true")
     args = parser.parse_args()
     print args
@@ -37,7 +46,9 @@ def _run():
                 branch_name = branches_[0]['name']
                 if len(branch_name) > 50:
                     branch_name = branch_name[:47] + '...'
-                check_it_out = raw_input("Check out '%s'? [Y/n] " % branch_name)
+                check_it_out = raw_input(
+                    "Check out '%s'? [Y/n] " % branch_name
+                )
                 if check_it_out.lower().strip() != 'n':
                     branches.checkout(branches_[0]['name'])
         elif args.branches:
@@ -81,11 +92,16 @@ def _run():
             if response.lower().strip() != 'n':
                 current_branch = state.current_branch()
                 if current_branch in ('master', 'develop'):
-                    response = raw_input("You're currently on `%s`. Are you sure you want commit from here? [y/N]")
+                    response = raw_input(
+                        "You're currently on `%s`. Are you sure you want "
+                        "commit from here? [y/N]"
+                    )
                     if response.lower().strip() == 'y':
                         return commit.commit_all(*other_args)
                     else:
-                        response = raw_input("\n\tWanna make a new branch? [Y/n]")
+                        response = raw_input(
+                            "\n\tWanna make a new branch? [Y/n]"
+                        )
                         if response.lower().strip() != 'n':
                             start.run()
                         else:

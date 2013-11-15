@@ -3,15 +3,9 @@ import re
 import stat
 import datetime
 import json
-import subprocess
 
 from . import config
-
-
-def get_repo_name():
-    # `git rev-parse --show-toplevel`
-    d = call('git rev-parse --show-toplevel'.split())[0]
-    return os.path.split(d)[-1].strip()
+from . import utils
 
 
 def save(description, branchname, bugnumber):
@@ -20,7 +14,7 @@ def save(description, branchname, bugnumber):
         # old style
         key = branchname
     else:
-        key = '%s:%s' % (get_repo_name(), branchname)
+        key = '%s:%s' % (utils.get_repo_name(), branchname)
     data[key] = {'description': description, 'bugnumber': bugnumber}
     json.dump(open(os.path.expanduser(config.SAVE_FILE), 'w'), indent=2)
 
@@ -28,16 +22,9 @@ def save(description, branchname, bugnumber):
 def load(branchname):
     data = json.load(open(os.path.expanduser(config.SAVE_FILE)))
     try:
-        return data['%s:%s' % (get_repo_name(), branchname)]
+        return data['%s:%s' % (utils.get_repo_name(), branchname)]
     except KeyError:
         return data[branchname]
-
-
-def call(seq):
-    """Use Popen to execute `seq` and return stdout."""
-    return subprocess.Popen(seq,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.PIPE).communicate()
 
 
 def _find_git_root(dir_):
@@ -50,12 +37,20 @@ def _find_git_root(dir_):
 
 
 def commit_all(*args):
-    branches = call(['git', 'branch'])[0]
-    branchname = [x.replace('* ', '').strip() for x in branches.splitlines() if x.startswith('* ')][0]
+    branches = utils.call(['git', 'branch'])[0]
+    branchname = [
+        x.replace('* ', '').strip()
+        for x in branches.splitlines()
+        if x.startswith('* ')
+    ][0]
     data = load(branchname)
 
-    _status = call(['git', 'status', '--porcelain'])[0]
-    unstaged = [x.replace('?? ', '').strip() for x in _status.splitlines() if x.startswith('?? ')]
+    _status = utils.call(['git', 'status', '--porcelain'])[0]
+    unstaged = [
+        x.replace('?? ', '').strip()
+        for x in _status.splitlines()
+        if x.startswith('?? ')
+    ]
     if unstaged:
         print "NOTE! There are untracked files:"
         _root = _find_git_root(os.curdir)
@@ -87,7 +82,10 @@ def commit_all(*args):
             # this question
             ignore = raw_input("Ignore untracked files? [Y/n]").lower().strip()
             if ignore.lower().strip() == 'n':
-                print "\n\tLeaving it to you to figure out what to do with the untracked files"
+                print (
+                    "\n\tLeaving it to you to figure out what to do with "
+                    "the untracked files"
+                )
                 return 1
             print
 
@@ -107,7 +105,9 @@ def commit_all(*args):
         msg = try_again
 
     if data['bugnumber']:
-        fixes_prefix = raw_input("Add the 'fixes ' prefix? [N/y] ").lower().strip()
+        fixes_prefix = raw_input(
+            "Add the 'fixes ' prefix? [N/y] "
+        ).lower().strip()
         if fixes_prefix in ('y', 'yes'):
             msg = 'fixes %s' % msg
 
@@ -115,7 +115,7 @@ def commit_all(*args):
     #cmd = ['git', 'commit', '-m', msg]
     if '--no-verify' in args:
         cmd.append('--no-verify')
-    out, err = call(cmd)
+    out, err = utils.call(cmd)
     err = err.strip()
     if err:
         print err
@@ -131,7 +131,7 @@ def commit_all(*args):
     push_for_you = raw_input("Run that push? [Y/n] ").lower().strip()
     if push_for_you not in ('n', 'no'):
         cmd = ['git', 'push', config.FORK_REMOTE_NAME, branchname]
-        out, err = call(cmd)
+        out, err = utils.call(cmd)
         err = err.strip()
         if err:
             print err

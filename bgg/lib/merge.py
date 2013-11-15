@@ -1,19 +1,13 @@
 import os
 import json
-import subprocess
 
 from . import config
-
-
-def get_repo_name():
-    # `git rev-parse --show-toplevel`
-    d = call('git rev-parse --show-toplevel'.split())
-    return os.path.split(d)[-1].strip()
+from . import utils
 
 
 def save(branchname):
     data = json.load(open(os.path.expanduser(config.SAVE_FILE)))
-    repo_name = get_repo_name()
+    repo_name = utils.get_repo_name()
     try:
         del data['%s:%s' % (repo_name, branchname)]
     except KeyError:
@@ -22,15 +16,9 @@ def save(branchname):
     json.dump(data, open(os.path.expanduser(config.SAVE_FILE), 'w'), indent=2)
 
 
-def call(seq):
-    """Use Popen to execute `seq` and return stdout."""
-    return subprocess.Popen(seq,
-                            stdout=subprocess.PIPE,
-                            stderr=subprocess.STDOUT).communicate()[0]
-
 def load(branchname):
     data = json.load(open(os.path.expanduser(config.SAVE_FILE)))
-    repo_name = get_repo_name()
+    repo_name = utils.get_repo_name()
     try:
         return data['%s:%s' % (repo_name, branchname)]
     except KeyError:
@@ -39,10 +27,9 @@ def load(branchname):
 
 
 def run():
-    branches = call(['git', 'branch'])
-    branchname = [x.replace('* ', '').strip() for x in branches.splitlines() if x.startswith('* ')][0]
+    branchname = utils.get_current_branchname()
     data = load(branchname)
-    _status = call(['git', 'status', '--porcelain'])
+    _status = utils.call(['git', 'status', '--porcelain'])
     changed = [x for x in _status.splitlines() if not x.startswith('?? ')]
     if changed:
         print "ERROR. Some still changed files"
@@ -50,11 +37,11 @@ def run():
         exit()
 
     if data.get('gitflow'):
-        print call(['git', 'flow', 'feature', 'finish', branchname.replace('feature/', '')])
+        print utils.call(['git', 'flow', 'feature', 'finish', branchname.replace('feature/', '')])
     else:
-        print call("git checkout master".split())
-        print call(['git', 'merge', branchname])
-        print call(['git', 'branch', '-d', branchname])
+        print utils.call("git checkout master".split())
+        print utils.call(['git', 'merge', branchname])
+        print utils.call(['git', 'branch', '-d', branchname])
 
     print "NOW, feel you might want to run:\n"
     if data.get('gitflow'):
@@ -72,4 +59,4 @@ def run():
             cmd.append('develop')
         else:
             cmd.append('master')
-        print call(cmd)
+        print utils.call(cmd)

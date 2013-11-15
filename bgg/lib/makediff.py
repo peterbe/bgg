@@ -30,7 +30,11 @@ def call(seq):
 
 def run():
     branches = call(['git', 'branch'])
-    branchname = [x.replace('* ', '').strip() for x in branches.splitlines() if x.startswith('* ')][0]
+    branchname = [
+        x.replace('* ', '').strip()
+        for x in branches.splitlines()
+        if x.startswith('* ')
+    ][0]
     data = load(branchname)
 
     def make_filename(bugnumber, increment=None):

@@ -1,4 +1,5 @@
-import os, json
+import json
+import os
 
 CONFIG_FILE = os.path.expanduser('~/.G.json')
 
@@ -6,6 +7,7 @@ CONFIG_FILE = os.path.expanduser('~/.G.json')
 def write(data):
     with open(CONFIG_FILE, 'w') as out:
         json.dump(data, out, indent=2)
+
 
 def read():
     with open(CONFIG_FILE) as inp:

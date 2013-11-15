@@ -9,6 +9,7 @@ import getpass
 import cookielib
 
 from . import config
+from . import utils
 
 
 def get_bugzilla_summary(bugnumber):
@@ -39,7 +40,8 @@ def get_bugzilla_summary(bugnumber):
                 for cookie in cookies:
                     credentials[cookie.name] = cookie.value
                 config.save_bugzilla_credentials(credentials)
-                print "Your bugzilla cookie is now stored in", config.CONFIG_FILE
+                print "Your bugzilla cookie is now stored in",
+                print config.CONFIG_FILE
 
     headers = {'Accept': 'application/json'}
     url = 'https://api-dev.bugzilla.mozilla.org/latest/bug/%s' % bugnumber
@@ -63,6 +65,7 @@ def get_bugzilla_summary(bugnumber):
     struct = json.loads(the_page)
     return struct['summary']
 
+
 def get_repo_name():
     # `git rev-parse --show-toplevel`
     d = call('git rev-parse --show-toplevel'.split())
@@ -83,6 +86,7 @@ def save(description, branchname, bugnumber, gitflow=False):
     }
     json.dump(data, open(os.path.expanduser(config.SAVE_FILE), 'w'), indent=2)
 
+
 def call(seq):
     """Use Popen to execute `seq` and return stdout."""
     return subprocess.Popen(seq,
@@ -91,11 +95,12 @@ def call(seq):
 
 
 def run(bugnumber=None):
-    branches = call(['git', 'branch'])
+    branches = utils.get_branches()
     if 'Not a git repository' in branches:
         print "Are you sure you're in a git repository?"
         return 1
-    current_branchname = [x.replace('* ', '').strip() for x in branches.splitlines() if x.startswith('* ')][0]
+
+    current_branchname = utils.get_current_branchname()
     print "You're currently on branch", current_branchname
     if bugnumber:
         summary = get_bugzilla_summary(bugnumber)

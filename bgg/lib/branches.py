@@ -1,6 +1,4 @@
-#!/usr/bin/env python
 import operator
-import sys
 import subprocess
 import datetime
 from email.utils import parsedate_tz

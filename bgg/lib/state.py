@@ -26,7 +26,7 @@ def _files():
 
 
 def files_staged_or_not_staged():
-    output = call('git status --porcelain')
+    #output = call('git status --porcelain')
     staged, not_staged, untracked = _files()
     return staged + not_staged
 
