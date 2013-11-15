@@ -68,11 +68,14 @@ def _run():
         makediff.run()
     elif args.start == 'help':
         parser.print_help()
-    elif not args.start.isdigit():
-        parser.print_help()
     else:
+        print repr(args.start)
+        return
         # start!
-        start.run(args.start)
+        if args.start == 'start':
+            start.run()
+        else:
+            start.run(args.start)
     return
 
     other_args = []

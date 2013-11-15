@@ -2,13 +2,20 @@ import os
 import subprocess
 
 
-def call(seq):
+def call_and_error(seq, and_print=False):
     """Use Popen to execute `seq` and return stdout."""
+    if isinstance(seq, basestring):
+        seq = seq.split()
     return subprocess.Popen(
         seq,
         stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT
-    ).communicate()[0]
+        stderr=and_print and subprocess.STDOUT or subprocess.PIPE
+    ).communicate()
+
+
+def call(seq, and_print=False):
+    """Use Popen to execute `seq` and return stdout."""
+    return call_and_error(seq, and_print=and_print)[0]
 
 
 def get_current_branchname():
@@ -26,5 +33,5 @@ def get_branches():
 
 def get_repo_name():
     # `git rev-parse --show-toplevel`
-    d = call('git rev-parse --show-toplevel'.split())[0]
+    d = call('git rev-parse --show-toplevel'.split())
     return os.path.split(d)[-1].strip()

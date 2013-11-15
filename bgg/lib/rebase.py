@@ -26,16 +26,17 @@ def run():
     data = load(branchname)
 
     if data.get('gitflow'):
-        print utils.call("git checkout develop".split())
-        print utils.call("git pull origin develop".split())
-        print utils.call(['git', 'checkout', branchname])
+        print utils.call("git checkout develop", and_print=True)
+        print utils.call("git pull origin develop", and_print=True)
+        print utils.call(['git', 'checkout', branchname], and_print=True)
         #print utils.call("git flow feature rebase -i".split())
         print "Now run:\n"
         print "    ", "git flow feature rebase -i"
     else:
-        print utils.call("git checkout master".split())
-        print utils.call("git pull origin master".split())
-        print utils.call(['git', 'checkout', branchname])
+
+        print utils.call("git checkout master", and_print=True)
+        print utils.call("git pull origin master", and_print=True)
+        print utils.call(['git', 'checkout', branchname], and_print=True)
         #print utils.call("git rebase -i master".split())
         print "Now run:\n"
         print "    ", "git rebase -i master"

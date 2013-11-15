@@ -37,15 +37,16 @@ def _find_git_root(dir_):
 
 
 def commit_all(*args):
-    branches = utils.call(['git', 'branch'])[0]
-    branchname = [
-        x.replace('* ', '').strip()
-        for x in branches.splitlines()
-        if x.startswith('* ')
-    ][0]
+    #branches = utils.call(['git', 'branch'])[0]
+    #branchname = [
+    #    x.replace('* ', '').strip()
+    #    for x in branches.splitlines()
+    #    if x.startswith('* ')
+    #][0]
+    branchname = utils.get_current_branchname()
     data = load(branchname)
 
-    _status = utils.call(['git', 'status', '--porcelain'])[0]
+    _status = utils.call(['git', 'status', '--porcelain'])
     unstaged = [
         x.replace('?? ', '').strip()
         for x in _status.splitlines()
@@ -115,9 +116,8 @@ def commit_all(*args):
     #cmd = ['git', 'commit', '-m', msg]
     if '--no-verify' in args:
         cmd.append('--no-verify')
-    out, err = utils.call(cmd)
-    err = err.strip()
-    if err:
+    out, err = utils.call_and_error(cmd)
+    if err and err.strip():
         print err
         return 1
     print "NOW, feel free to run:\n"
@@ -131,9 +131,8 @@ def commit_all(*args):
     push_for_you = raw_input("Run that push? [Y/n] ").lower().strip()
     if push_for_you not in ('n', 'no'):
         cmd = ['git', 'push', config.FORK_REMOTE_NAME, branchname]
-        out, err = utils.call(cmd)
-        err = err.strip()
-        if err:
+        out, err = utils.call_and_error(cmd)
+        if err and err.strip():
             print err
             return 2
 
