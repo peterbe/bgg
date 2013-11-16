@@ -70,3 +70,23 @@ def print_list(branches):
         print "\t", each['age'], "ago"
         print "\t", each['msg'].strip()
         print
+
+
+def run(searchstring):
+    branches_ = find(searchstring)
+    if branches_:
+        print "Found existing branches..."
+        print_list(branches_)
+        if len(branches_) == 1:
+            branch_name = branches_[0]['name']
+            if len(branch_name) > 50:
+                branch_name = branch_name[:47] + '...'
+            check_it_out = raw_input(
+                "Check out '%s'? [Y/n] " % branch_name
+            )
+            if check_it_out.lower().strip() != 'n':
+                checkout(branches_[0]['name'])
+    elif searchstring:
+        print "Found no branches matching: %s" % searchstring
+    else:
+        print "Found no branches"
