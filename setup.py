@@ -42,6 +42,7 @@ setup(
                      #),
     author='Peter Bengtsson',
     author_email='mail@peterbe.com',
+    url='https://github.com/peterbe/bgg',
     license='MIT',
     packages=find_packages(),
     include_package_data=True,
