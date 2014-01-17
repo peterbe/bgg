@@ -36,6 +36,12 @@ def run():
         print "\t", "\n\t".join(changed)
         exit()
 
+    last_force_push = raw_input(
+        "One last forced push to %s? [N/y] " % config.FORK_REMOTE_NAME
+    ).lower().strip()
+    if last_force_push in ('y', 'yes'):
+        utils.call(['git', 'push', '-f', config.FORK_REMOTE_NAME, branchname])
+
     if data.get('gitflow'):
         print utils.call(['git', 'flow', 'feature', 'finish', branchname.replace('feature/', '')])
     else:
