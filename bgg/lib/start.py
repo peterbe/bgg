@@ -116,7 +116,7 @@ def run(bugnumber=None):
 
     branchname = ''
     if bugnumber:
-        branchname = '%s-' % bugnumber
+        branchname = 'bug-%s-' % bugnumber
 
     def clean_branchname(string):
         string = (
@@ -128,7 +128,7 @@ def run(bugnumber=None):
             .replace('->', '-')
             .replace('---', '-')
         )
-        for each in ':\'"/(),[].?`$<>!':
+        for each in ':\'"/(),[].?`$<>':
             string = string.replace(each, '')
         return string.lower().strip()
 

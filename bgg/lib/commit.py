@@ -91,7 +91,7 @@ def commit_all(*args):
             print
 
     if data['bugnumber']:
-        msg = '%s - %s' % (data['bugnumber'], data['description'])
+        msg = 'bug %s - %s' % (data['bugnumber'], data['description'])
     else:
         msg = data['description']
 
