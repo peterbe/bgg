@@ -65,4 +65,4 @@ def run():
             cmd.append('develop')
         else:
             cmd.append('master')
-        print utils.call(cmd)
+        print utils.call_and_error(cmd)
