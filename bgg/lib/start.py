@@ -128,7 +128,7 @@ def run(bugnumber=None):
             .replace('->', '-')
             .replace('---', '-')
         )
-        for each in ':\'"/(),[].?`$<>':
+        for each in ':\'"/(),[].?`$<>#':
             string = string.replace(each, '')
         return string.lower().strip()
 
