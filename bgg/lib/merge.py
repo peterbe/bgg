@@ -49,7 +49,7 @@ def run():
         print utils.call(['git', 'merge', branchname])
         print utils.call(['git', 'branch', '-d', branchname])
 
-    print "NOW, feel you might want to run:\n"
+    print "NOW, you might want to run:\n"
     if data.get('gitflow'):
         print "git push origin develop"
     else:
