@@ -1,11 +1,14 @@
 import sys
-from lib import start
-from lib import branches
-from lib import state
-from lib import commit
-from lib import merge
-from lib import rebase
-from lib import makediff
+from lib import (
+    start,
+    branches,
+    state,
+    commit,
+    merge,
+    rebase,
+    makediff,
+    getback
+)
 
 
 def run():
@@ -91,6 +94,17 @@ def _run():
 
     p = subparsers.add_parser('makediff', help="Make a diff file")
     p.set_defaults(func=run_makediff)
+
+    ##
+    ## Getback
+    ##
+    def run_getback(args):
+        getback.run()
+
+    p = subparsers.add_parser(
+        'getback',
+        help="Go back to master, update and clean up the branch you came from")
+    p.set_defaults(func=run_getback)
 
     ##
     ##

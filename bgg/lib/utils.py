@@ -15,6 +15,8 @@ def call_and_error(seq, and_print=False):
 
 def call(seq, and_print=False):
     """Use Popen to execute `seq` and return stdout."""
+    if isinstance(seq, basestring):
+        seq = seq.split()
     return call_and_error(seq, and_print=and_print)[0]
 
 
