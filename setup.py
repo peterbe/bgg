@@ -36,10 +36,7 @@ setup(
     scripts=['G'],
     version=find_version('bgg/__init__.py'),
     description="A love story with Bugzilla, git and Github",
-    long_description=read('README.md') + '\n\n',# +
-                     #'\n'.join(read('docs', 'changelog.rst')
-                     #              .splitlines()[1:]
-                     #),
+    long_description=read('README.md') + '\n\n',
     author='Peter Bengtsson',
     author_email='mail@peterbe.com',
     url='https://github.com/peterbe/bgg',
@@ -58,8 +55,4 @@ setup(
         'Programming Language :: Python :: 2.7',
     ],
     install_requires=find_install_requires(),
-
-    #tests_require=['nose'],
-    #test_suite='tests',
-    #url='http://github.com/peterbe/mincss'
 )

@@ -7,7 +7,8 @@ from lib import (
     merge,
     rebase,
     makediff,
-    getback
+    getback,
+    cleanup,
 )
 
 
@@ -105,6 +106,19 @@ def _run():
         'getback',
         help="Go back to master, update and clean up the branch you came from")
     p.set_defaults(func=run_getback)
+
+    ##
+    ## Cleanup
+    ##
+    def run_cleanup(args):
+        cleanup.run(args.searchstring)
+
+    p = subparsers.add_parser(
+        'cleanup',
+        help="Delete a merged branch locally and remotely"
+    )
+    p.set_defaults(func=run_cleanup)
+    p.add_argument('searchstring', nargs='?', help='Branch search string')
 
     ##
     ##
