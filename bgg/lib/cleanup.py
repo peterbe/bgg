@@ -35,10 +35,13 @@ def run(search):
         return_to = current
         if data.get('gitflow'):
             print utils.call('git checkout develop')
-            print utils.call('git pull origin develop')
         else:
             print utils.call('git checkout master')
-            print utils.call('git pull origin master')
+
+    if data.get('gitflow'):
+        print utils.call('git pull origin develop')
+    else:
+        print utils.call('git pull origin master')
 
     _merged = [
         x.strip() for x in
@@ -60,7 +63,7 @@ def run(search):
                     ['git', 'push', config.FORK_REMOTE_NAME, ':%s' % branchname]
                 )
     else:
-        print "%s can't be deleted because it's not merged"
+        print "%s can't be deleted because it's not merged" % _merged
 
     if return_to:
         print utils.call(['git', 'checkout', return_to])
