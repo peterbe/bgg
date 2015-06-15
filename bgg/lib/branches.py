@@ -58,14 +58,25 @@ def find(search):
     return branches
 
 
+def get_merged_branches():
+    merged = []
+    for line in call('git branch --merged').splitlines():
+        line = line.strip()
+        if not line.startswith('*'):
+            # it can't be the one your on
+            merged.append(line)
+    return merged
+
+
 def checkout(branch_name):
     call('git checkout %s' % branch_name)
 
 
-def print_list(branches):
+def print_list(branches, merged):
     for each in sorted(branches, key=operator.itemgetter('dt')):
         print '-' * 79
-        print each['name']
+        is_merged = " (MERGED ALREADY!)" if each['name'] in merged else ''
+        print each['name'], is_merged
         print "\t", each['date']
         print "\t", each['age'], "ago"
         print "\t", each['msg'].strip()
@@ -75,8 +86,9 @@ def print_list(branches):
 def run(searchstring):
     branches_ = find(searchstring)
     if branches_:
+        merged = get_merged_branches()
         print "Found existing branches..."
-        print_list(branches_)
+        print_list(branches_, merged)
         if len(branches_) == 1:
             branch_name = branches_[0]['name']
             if len(branch_name) > 50:
