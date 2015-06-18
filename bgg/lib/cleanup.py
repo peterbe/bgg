@@ -19,7 +19,10 @@ def run(search):
         print "ERROR. No branch matched by search"
         exit()
     elif len(branches_) > 1:
-        branches.print_list(branches_)
+        branches.print_list(
+            branches_,
+            branches.get_merged_branches()
+        )
         print "ERROR. More than one match"
         exit()
 
