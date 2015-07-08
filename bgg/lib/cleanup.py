@@ -53,15 +53,15 @@ def run(search):
     ]
     branchname = branch['name']
     if branchname in _merged:
-        branch_delete = raw_input(
-            "Delete merged branch '%s'? [Y/n]" % branchname
-        ).lower().strip()
-        if branch_delete not in ('n', 'no'):
+        # branch_delete = raw_input(
+        #     "Delete merged branch '%s'? [Y/n]" % branchname
+        # ).lower().strip()
+        if 1: #branch_delete not in ('n', 'no'):
             print utils.call(['git', 'branch', '-d', branchname])
-            remote_delete = raw_input(
-                "Delete remote fork branch too? [Y/n]"
-            ).lower().strip()
-            if remote_delete not in ('n', 'no'):
+            # remote_delete = raw_input(
+            #     "Delete remote fork branch too? [Y/n]"
+            # ).lower().strip()
+            if 1: #remote_delete not in ('n', 'no'):
                 print utils.call(
                     ['git', 'push', config.FORK_REMOTE_NAME, ':%s' % branchname]
                 )
