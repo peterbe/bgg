@@ -19,12 +19,17 @@ def run(search):
         print "ERROR. No branch matched by search"
         exit()
     elif len(branches_) > 1:
-        branches.print_list(
-            branches_,
-            branches.get_merged_branches()
-        )
-        print "ERROR. More than one match"
-        exit()
+        if search in branches:
+            # one of them was an exact match
+            branches_ = [x for x in branches_ if x == search]
+        else:
+            # multiple and no exact match
+            branches.print_list(
+                branches_,
+                branches.get_merged_branches()
+            )
+            print "ERROR. More than one match"
+            exit()
 
     branch = branches_[0]
     data = merge.load(branch['name'])
