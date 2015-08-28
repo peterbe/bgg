@@ -19,9 +19,9 @@ def run(search):
         print "ERROR. No branch matched by search"
         exit()
     elif len(branches_) > 1:
-        if search in branches:
+        if search in [x['name'] for x in branches_]:
             # one of them was an exact match
-            branches_ = [x for x in branches_ if x == search]
+            branches_ = [x for x in branches_ if x['name'] == search]
         else:
             # multiple and no exact match
             branches.print_list(
