@@ -9,6 +9,7 @@ from lib import (
     makediff,
     getback,
     cleanup,
+    push,
 )
 
 
@@ -119,6 +120,19 @@ def _run():
     )
     p.set_defaults(func=run_cleanup)
     p.add_argument('searchstring', nargs='?', help='Branch search string')
+
+    ##
+    ## Push
+    ##
+    def run_push(args):
+        push.run(args.force)
+
+    p = subparsers.add_parser(
+        'push',
+        help="Push accordingly"
+    )
+    p.set_defaults(func=run_push)
+    p.add_argument('-f', '--force', action='store_true', help='Optionally force push')
 
     ##
     ##

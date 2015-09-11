@@ -37,12 +37,6 @@ def _find_git_root(dir_):
 
 
 def commit_all(*args):
-    #branches = utils.call(['git', 'branch'])[0]
-    #branchname = [
-    #    x.replace('* ', '').strip()
-    #    for x in branches.splitlines()
-    #    if x.startswith('* ')
-    #][0]
     branchname = utils.get_current_branchname()
     data = load(branchname)
 
