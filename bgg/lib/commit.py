@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import re
 import stat
@@ -128,6 +130,31 @@ def commit_all(*args):
         out, err = utils.call_and_error(cmd)
         if err and err.strip():
             print err
-            return 2
+            # return 2
+
+
+        out, err = utils.call_and_error('git remote show origin')
+        if err:
+            print "No remote called 'origin'"
+            return 0
+
+        print "Now, to make a new Pull Request, go to:"
+        print
+        for line in out.splitlines():
+            if line.strip().startswith('Push  URL'):
+                rest = line.split('github.com:')[1]
+                org, repo = rest.split('.git')[0].split('/', 1)
+                break
+        url = "https://github.com/%s/%s/compare/%s:%s...%s:%s?expand=1" % (
+            org,
+            repo,
+            org,
+            'master',
+            config.FORK_REMOTE_NAME,
+            branchname,
+        )
+        print url
+        print "(⌘-click to open URLs)"
+        print
 
     return 0
