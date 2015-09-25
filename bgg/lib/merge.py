@@ -65,4 +65,6 @@ def run():
             cmd.append('develop')
         else:
             cmd.append('master')
-        print utils.call_and_error(cmd)
+        out, err = utils.call_and_error(cmd)
+        if err and err.strip():
+            print err

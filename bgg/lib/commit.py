@@ -130,8 +130,6 @@ def commit_all(*args):
         out, err = utils.call_and_error(cmd)
         if err and err.strip():
             print err
-            # return 2
-
 
         out, err = utils.call_and_error('git remote show origin')
         if err:
