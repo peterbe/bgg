@@ -45,11 +45,12 @@ def _run():
     ## Start
     ##
     def run_start(args):
-        if args.bugid and not args.bugid.isdigit():
-            print >>sys.stderr, "Bug ID not a number"
-            #parser.print_help()
-        else:
-            start.run(args.bugid)
+        start.run(args.bugid)
+        # if args.bugid and not args.bugid.isdigit():
+        #     print >>sys.stderr, "Bug ID not a number"
+        #     #parser.print_help()
+        # else:
+        #     start.run(args.bugid)
 
     p = subparsers.add_parser('start', help="Start a new branch")
     p.set_defaults(func=run_start)

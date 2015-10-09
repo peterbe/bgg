@@ -11,6 +11,10 @@ import cookielib
 from . import config
 from . import utils
 
+bugzilla_url_regex = reg = re.compile(
+    re.escape('https://bugzilla.mozilla.org/show_bug.cgi?id=') + '(\d+)$'
+)
+
 
 def get_bugzilla_summary(bugnumber):
     credentials = config.BUGZILLA_CREDENTIALS
@@ -103,6 +107,12 @@ def run(bugnumber=None):
     current_branchname = utils.get_current_branchname()
     print "You're currently on branch", current_branchname
     if bugnumber:
+        # perhaps the user was lazy any typed in something like a full
+        # url to a bug. If so, get just the bug number
+        if bugzilla_url_regex.findall(bugnumber):
+            bugnumber = bugzilla_url_regex.findall(bugnumber)[0]
+        if not bugnumber.isdigit():
+            raise ValueError("%r doesn't look like a bug number")
         summary = get_bugzilla_summary(bugnumber)
         summary = re.sub('^\[[\w-]+\]\s*', '', summary)
     else:
