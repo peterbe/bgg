@@ -140,7 +140,7 @@ def commit_all(*args):
         print
         for line in out.splitlines():
             if line.strip().startswith('Push  URL'):
-                rest = line.split('github.com:')[1]
+                rest = re.split('github\.com[:/]', line)[1]
                 org, repo = rest.split('.git')[0].split('/', 1)
                 break
         url = "https://github.com/%s/%s/compare/%s:%s...%s:%s?expand=1" % (
