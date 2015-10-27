@@ -2,7 +2,6 @@ import sys
 from lib import (
     start,
     branches,
-    state,
     commit,
     merge,
     rebase,
@@ -10,6 +9,7 @@ from lib import (
     getback,
     cleanup,
     push,
+    tags,
 )
 
 
@@ -27,9 +27,9 @@ def _run():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers()
 
-    ##
-    ## Branches
-    ##
+    #
+    # Branches
+    #
 
     def run_branches(args):
         branches.run(args.searchstring)
@@ -41,24 +41,19 @@ def _run():
     p.set_defaults(func=run_branches)
     p.add_argument('searchstring', nargs='?', help='Branch search string')
 
-    ##
-    ## Start
-    ##
+    #
+    # Start
+    #
     def run_start(args):
         start.run(args.bugid)
-        # if args.bugid and not args.bugid.isdigit():
-        #     print >>sys.stderr, "Bug ID not a number"
-        #     #parser.print_help()
-        # else:
-        #     start.run(args.bugid)
 
     p = subparsers.add_parser('start', help="Start a new branch")
     p.set_defaults(func=run_start)
     p.add_argument('bugid', nargs='?', help='Optional Bugzilla ID')
 
-    ##
-    ## Commit
-    ##
+    #
+    # Commit
+    #
     def run_commit(args):
         if args.no_verify:
             commit.commit_all('--no-verify')
@@ -71,36 +66,40 @@ def _run():
                    help="Makes sense if you use check.py",
                    action="store_true")
 
-    ##
-    ## Rebase
-    ##
+    #
+    # Rebase
+    #
     def run_rebase(args):
         rebase.run()
 
-    p = subparsers.add_parser('rebase', help="Pull latest master and rebase against that")
+    p = subparsers.add_parser(
+        'rebase', help="Pull latest master and rebase against that"
+    )
     p.set_defaults(func=run_rebase)
 
-    ##
-    ## Merge
-    ##
+    #
+    # Merge
+    #
     def run_merge(args):
         merge.run()
 
-    p = subparsers.add_parser('merge', help="Merge the current branch onto master")
+    p = subparsers.add_parser(
+        'merge', help="Merge the current branch onto master"
+    )
     p.set_defaults(func=run_merge)
 
-    ##
-    ## Makediff
-    ##
+    #
+    # Makediff
+    #
     def run_makediff(args):
         makediff.run()
 
     p = subparsers.add_parser('makediff', help="Make a diff file")
     p.set_defaults(func=run_makediff)
 
-    ##
-    ## Getback
-    ##
+    #
+    # Getback
+    #
     def run_getback(args):
         getback.run()
 
@@ -109,9 +108,9 @@ def _run():
         help="Go back to master, update and clean up the branch you came from")
     p.set_defaults(func=run_getback)
 
-    ##
-    ## Cleanup
-    ##
+    #
+    # Cleanup
+    #
     def run_cleanup(args):
         cleanup.run(args.searchstring)
 
@@ -122,9 +121,9 @@ def _run():
     p.set_defaults(func=run_cleanup)
     p.add_argument('searchstring', nargs='?', help='Branch search string')
 
-    ##
-    ## Push
-    ##
+    #
+    # Push
+    #
     def run_push(args):
         push.run(args.force)
 
@@ -133,11 +132,25 @@ def _run():
         help="Push accordingly"
     )
     p.set_defaults(func=run_push)
-    p.add_argument('-f', '--force', action='store_true', help='Optionally force push')
+    p.add_argument(
+        '-f', '--force', action='store_true', help='Optionally force push'
+    )
 
-    ##
-    ##
-    ##
+    #
+    # Tag
+    #
+    def run_tag(args):
+        tags.run()
+
+    p = subparsers.add_parser(
+        'tag',
+        help="Create and push a new tag"
+    )
+    p.set_defaults(func=run_tag)
+
+    #
+    #
+    #
 
     args = parser.parse_args()
     args.func(args)
