@@ -109,8 +109,8 @@ def run(bugnumber=None):
     if bugnumber:
         # perhaps the user was lazy any typed in something like a full
         # url to a bug. If so, get just the bug number
-        if bugzilla_url_regex.findall(bugnumber):
-            bugnumber = bugzilla_url_regex.findall(bugnumber)[0]
+        if bugzilla_url_regex.findall(bugnumber.split('#')[0]):
+            bugnumber = bugzilla_url_regex.findall(bugnumber.split('#')[0])[0]
         if not bugnumber.isdigit():
             raise ValueError("%r doesn't look like a bug number")
         summary = get_bugzilla_summary(bugnumber)
