@@ -18,6 +18,7 @@ bugzilla_url_regex = reg = re.compile(
 
 def get_bugzilla_summary(bugnumber):
     credentials = config.BUGZILLA_CREDENTIALS
+    print credentials
     if not credentials:
         credentials = None
         bugzilla_login = raw_input('Bugzilla username: ')
@@ -43,6 +44,7 @@ def get_bugzilla_summary(bugnumber):
                 credentials = {'username': bugzilla_login}
                 for cookie in cookies:
                     credentials[cookie.name] = cookie.value
+                print "Credentials now:", credentials
                 config.save_bugzilla_credentials(credentials)
                 print "Your bugzilla cookie is now stored in",
                 print config.CONFIG_FILE
@@ -51,8 +53,7 @@ def get_bugzilla_summary(bugnumber):
     url = 'https://api-dev.bugzilla.mozilla.org/latest/bug/%s' % bugnumber
     request_arguments = {}
     if credentials:
-        request_arguments['userid'] = credentials['Bugzilla_login']
-        request_arguments['cookie'] = credentials['Bugzilla_logincookie']
+        request_arguments['cookie'] = credentials['Bugzilla_login_request_cookie']
 
     data = urllib.urlencode(request_arguments)
     if data:
