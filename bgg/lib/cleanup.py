@@ -10,16 +10,31 @@ from . import branches
 
 def run(search):
     if not search:
-        print "ERROR. You must supply a search term"
+        print (
+            "ERROR. You must supply a search term or "
+            "the magically keyword MERGED"
+        )
         exit()
 
-    branches_ = branches.find(search)
+    if search == 'MERGED':
+        branches_ = branches.find(None)
+        merged = branches.get_merged_branches()
+        # print branches_
+        # print merged
+        branches_ = [
+            x for x in branches_
+            if x['name'] in merged and x['name'] != 'master'
+        ]
+    else:
+        branches_ = branches.find(search)
     branches_ = sorted(branches_, key=operator.itemgetter('dt'))
     if not branches_:
         print "ERROR. No branch matched by search"
         exit()
     elif len(branches_) > 1:
-        if search in [x['name'] for x in branches_]:
+        if search == 'MERGED':
+            branches.print_list(branches_, merged)
+        elif search in [x['name'] for x in branches_]:
             # one of them was an exact match
             branches_ = [x for x in branches_ if x['name'] == search]
         else:
@@ -31,7 +46,13 @@ def run(search):
             print "ERROR. More than one match"
             exit()
 
-    branch = branches_[0]
+    if search == 'MERGED':
+        for branch in branches_:
+            _cleanup(branch)
+    else:
+        _cleanup(branches_[0])
+
+def _cleanup(branch):
     data = merge.load(branch['name'])
 
     current = utils.get_current_branchname()
