@@ -19,8 +19,6 @@ def run(search):
     if search == 'MERGED':
         branches_ = branches.find(None)
         merged = branches.get_merged_branches()
-        # print branches_
-        # print merged
         branches_ = [
             x for x in branches_
             if x['name'] in merged and x['name'] != 'master'
