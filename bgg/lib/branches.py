@@ -75,7 +75,9 @@ def checkout(branch_name):
 def print_list(branches, merged):
     for each in sorted(branches, key=operator.itemgetter('dt')):
         print '-' * 79
-        is_merged = " (MERGED ALREADY!)" if each['name'] in merged else ''
+        is_merged = ''
+        if each['name'] in merged and each['name'] != 'master':
+            is_merged = " (MERGED ALREADY!)"
         print each['name'], is_merged
         print "\t", each['date']
         print "\t", each['age'], "ago"
