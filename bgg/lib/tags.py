@@ -1,5 +1,6 @@
 import re
 
+from . import config
 from . import utils
 
 
@@ -12,6 +13,9 @@ def run():
         ])
         print out
         print err
+    out, err = utils.call_and_error(
+        "git fetch %s" % (config.FORK_REMOTE_NAME,)
+    )
     out, err = utils.call_and_error(
         "git for-each-ref --sort=taggerdate "
         "--format %(refname) refs/tags".split()
