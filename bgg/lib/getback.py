@@ -29,18 +29,18 @@ def run():
         utils.call('git branch --merged').splitlines()
         if x.strip() and not x.strip().startswith('*')
     ]
-    if branchname in _merged:
-        # branch_delete = raw_input(
-        #     "Delete merged branch '%s'? [Y/n]" % branchname
-        # ).lower().strip()
-        if 1: #branch_delete not in ('n', 'no'):
-            # print ' '.join(['git', 'branch', '-d', branchname])
+    certain = False
+    if branchname not in _merged:
+        print "Branch not merged. Rebased remotely maybe."
+        certain = raw_input(
+            "Are you certain it's actually merged? [Y/n] "
+        )
+        certain = certain.lower().strip() != 'n'
+    if branchname in _merged or certain:
+        if branchname in _merged:
             print utils.call(['git', 'branch', '-d', branchname])
-            # remote_delete = raw_input(
-            #     "Delete remote fork branch too? [Y/n]"
-            # ).lower().strip()
-            if 1: #remote_delete not in ('n', 'no'):
-                print utils.call(
-                    ['git', 'push', config.FORK_REMOTE_NAME, ':%s' % branchname]
-                )
-                # print ' '.join(['git', 'push', config.FORK_REMOTE_NAME, ':%s' % branchname])
+        else:
+            print utils.call(['git', 'branch', '-D', branchname])
+        print utils.call(
+            ['git', 'push', config.FORK_REMOTE_NAME, ':%s' % branchname]
+        )
