@@ -83,7 +83,7 @@ def _cleanup(branch):
             "Are you certain it's actually merged? [Y/n] "
         )
         certain = certain.lower().strip() != 'n'
-    if branchname in _merged:
+    if branchname in _merged or certain:
         if branchname in _merged:
             print utils.call(['git', 'branch', '-d', branchname])
         else:
