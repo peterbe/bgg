@@ -1,3 +1,9 @@
+DEPRECATED AND DEAD
+===================
+
+Use [https://pypi.org/project/gg/](https://pypi.org/project/gg/) instead. 
+
+
 Bugzilla, Git and Github
 ========================
 
